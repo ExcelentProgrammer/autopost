@@ -27,7 +27,7 @@ class AutoPostJob implements ShouldQueue
     {
         try {
 
-            $sleep = 15;
+            $sleep = 20;
 
             $service = new AutopostService($this->title, $this->file);
 
