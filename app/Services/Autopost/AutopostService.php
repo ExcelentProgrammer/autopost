@@ -5,6 +5,12 @@ namespace App\Services\Autopost;
 use App\Helpers\Autopost\Webdriver;
 use App\Helpers\Helpers;
 use Facebook\WebDriver\WebDriverBy;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Env;
+use JetBrains\PhpStorm\NoReturn;
+use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Internal\InputFile;
 use Throwable;
 
 class AutopostService
@@ -105,6 +111,17 @@ class AutopostService
             Helpers::log($exception->getMessage());
             return false;
         }
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    #[NoReturn] public function telegram($chat_id): bool
+    {
+        $token = Env::get("BOT_TOKEN");
+        $bot = new Nutgram($token);
+        $bot->sendPhoto(photo: InputFile::make(fopen($this->file, "rb")), chat_id: $chat_id, caption: $this->title);
+        return true;
     }
 }
 

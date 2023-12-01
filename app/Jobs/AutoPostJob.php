@@ -31,6 +31,9 @@ class AutoPostJob implements ShouldQueue
 
             $service = new AutopostService($this->title, $this->file);
 
+            $service->telegram(1769851684);
+
+
             $service->facebook();
             sleep($sleep);
 
