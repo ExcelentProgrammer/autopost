@@ -19,6 +19,7 @@ class Helpers
 
     static function log($data): void
     {
+        print_r(json_encode($data));
         $file = fopen(App::basePath() . "/storage/logs/autopost.txt", "a");
         fwrite($file, json_encode($data) . "\n");
         fclose($file);

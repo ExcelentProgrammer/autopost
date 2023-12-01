@@ -42,8 +42,7 @@ class AutopostService
             $driver = $this->driver;
             $driver->start();
             sleep($this->sleep);
-            $el = $driver->driver->findElement(WebDriverBy::xpath("//div[contains(@class,'x1iyjqo2 xh8yej3')]"))->findElements(WebDriverBy::xpath("//div[@class='x1n2onr6']"));
-            $el[7]->click();
+            $driver->click(by:WebDriverBy::xpath('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[7]/div/span/div/a'));
             sleep($this->sleep);
             $el = $driver->driver->findElement(WebDriverBy::xpath("/html/body/div[11]/div[1]/div/div[3]/div/div/div/div/div/div/div/div[2]/div[1]/form/input"));
             $el->sendKeys($this->file);
