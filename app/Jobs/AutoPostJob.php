@@ -33,18 +33,19 @@ class AutoPostJob implements ShouldQueue
 
 //            $service->telegram(1769851684);
 
+            try {
+                $service->instagram();
+                sleep($sleep);
+            } catch (Throwable $e) {
+                print_r("instagram error");
+            }
             try{
                 $service->threads();
                 sleep($sleep);
             }catch (Throwable $e){
                 print_r("Threads error");
             }
-//            try{
-//                $service->instagram();
-//                sleep($sleep);
-//            }catch (Throwable $e){
-//                print_r("instagram error");
-//            }
+
 
             try{
                 $service->facebook();
