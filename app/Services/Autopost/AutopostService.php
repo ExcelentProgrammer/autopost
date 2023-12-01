@@ -44,7 +44,7 @@ class AutopostService
             sleep($this->sleep);
             $driver->click(by:WebDriverBy::xpath('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[7]/div/span/div/a'));
             sleep($this->sleep);
-            $el = $driver->driver->findElement(WebDriverBy::xpath("/html/body/div[11]/div[1]/div/div[3]/div/div/div/div/div/div/div/div[2]/div[1]/form/input"));
+            $el = $driver->driver->findElement(WebDriverBy::xpath("//input[@class='_ac69']"));
             $el->sendKeys($this->file);
             sleep($this->sleep);
             $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
