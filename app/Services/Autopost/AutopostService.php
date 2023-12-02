@@ -5,10 +5,11 @@ namespace App\Services\Autopost;
 use App\Helpers\Autopost\Webdriver;
 use App\Helpers\Helpers;
 use Facebook\WebDriver\WebDriverBy;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Env;
 use JetBrains\PhpStorm\NoReturn;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Internal\InputFile;
 use Throwable;
@@ -42,7 +43,7 @@ class AutopostService
             $driver = $this->driver;
             $driver->start();
             sleep($this->sleep);
-            $driver->click(by:WebDriverBy::xpath('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[7]/div/span/div/a'));
+            $driver->click(by: WebDriverBy::xpath('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[7]/div/span/div/a'));
             sleep($this->sleep);
             $el = $driver->driver->findElement(WebDriverBy::xpath("//input[@class='_ac69']"));
             $el->sendKeys($this->file);
@@ -115,7 +116,7 @@ class AutopostService
     }
 
     /**
-     * @throws GuzzleException
+     * @throws NotFoundExceptionInterface|ContainerExceptionInterface
      */
     #[NoReturn] public function telegram($chat_id): bool
     {
