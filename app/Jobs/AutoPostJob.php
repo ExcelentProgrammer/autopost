@@ -26,7 +26,15 @@ class AutoPostJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            exec("pkill chrome");
+            try {
+                exec("pkill chrome");
+                exec("pkill chromedriver");
+                exec("chromedriver > /dev/null 2>&1 &");
+                sleep(2);
+            } catch (Throwable $e) {
+                print_r($e->getMessage());
+            }
+
             $sleep = 20;
             $service = new AutopostService($this->title, $this->file);
 
