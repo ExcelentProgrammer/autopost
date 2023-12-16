@@ -15,7 +15,6 @@ class Webdriver
 
     public RemoteWebDriver $driver;
     public mixed $url;
-
     #[NoReturn] function __construct($url, $headless = false, $save_data = false)
     {
         $this->url = $url;
