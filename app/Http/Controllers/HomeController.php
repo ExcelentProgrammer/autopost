@@ -17,30 +17,34 @@ class HomeController extends Controller
     function index(PostCreateRequest $request): JsonResponse
     {
 
-        if ($request->files->has("file")) {
-            $file = $request->file("file");
-        } else {
-            $file = $request->input("fileUrl");
+        try {
+            if ($request->files->has("file")) {
+                $file = $request->file("file");
+            } else {
+                $file = $request->input("fileUrl");
+            }
+            Post::query()->create([
+                "title" => $request->input("title"),
+                "file" => $file
+            ]);
+
+            if ($request->files->has("file")) {
+                $file = Storage::putFile("posts", $request->file("file"));
+            } else {
+                $remoteUrl = $request->input("fileUrl");
+                $fileContents = file_get_contents($remoteUrl);
+                $filename = 'downloaded_file_' . time() . '.jpg';
+                $file = 'public/' . $filename;
+                Storage::put($file, $fileContents);
+            }
+
+            $file_path = Storage::path($file);
+
+            AutoPostJob::dispatch(title: $request->input("title"), file: $file_path);
+            return $this->success(message: __("post:create"));
+        } catch (\Throwable $e) {
+            return $this->error(message: $e->getMessage());
         }
-        Post::query()->create([
-            "title" => $request->input("title"),
-            "file" => $file
-        ]);
-
-        if ($request->files->has("file")) {
-            $file = Storage::putFile("posts", $request->file("file"));
-        } else {
-            $remoteUrl = $request->input("fileUrl");
-            $fileContents = file_get_contents($remoteUrl);
-            $filename = 'downloaded_file_' . time() . '.jpg';
-            $file = 'public/' . $filename;
-            Storage::put($file, $fileContents);
-        }
-
-        $file_path = Storage::path($file);
-
-        AutoPostJob::dispatch(title: $request->input("title"), file: $file_path);
-        return $this->success(message: __("post:create"));
-
     }
 }
+

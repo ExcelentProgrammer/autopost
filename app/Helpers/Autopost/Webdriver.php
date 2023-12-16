@@ -26,13 +26,14 @@ class Webdriver
         if ($headless)
             $options->addArguments(['--headless']);
         if ($save_data) {
-            $options->addArguments(['--user-data-dir=data']);
+            $options->addArguments(['--user-data-dir='.realpath("chrome")]);
         }
+
         $options->addArguments(['--no-sandbox', '--disable-dev-shm-usage', '--enable-logging']);
 
         $service = DesiredCapabilities::chrome();
         $service->setCapability(ChromeOptions::CAPABILITY, $options);
-        $this->driver = ChromeDriver::start($service);
+        $this->driver = RemoteWebDriver::create("http://127.0.0.1:4444",$service);
     }
 
     function start(): void

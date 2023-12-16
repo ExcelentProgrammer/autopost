@@ -43,9 +43,6 @@ class AutoPostJob implements ShouldQueue
                 print_r("Threads error");
             }
 
-
-
-
             try {
                 $service->facebook();
                 sleep($sleep);

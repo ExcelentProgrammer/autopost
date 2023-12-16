@@ -51,7 +51,6 @@ class AutopostService
         file_put_contents($file_path, file_get_contents($file));
         $this->file = $file_path;
 
-
         $this->sleep = 5;
         $this->driver = new Webdriver($url, headless: false, save_data: true);
     }
