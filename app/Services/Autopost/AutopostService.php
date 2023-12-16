@@ -6,6 +6,7 @@ use App\Helpers\Autopost\Webdriver;
 use App\Helpers\Helpers;
 use Facebook\WebDriver\WebDriverBy;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Env;
 use JetBrains\PhpStorm\NoReturn;
 use Psr\Container\ContainerExceptionInterface;
@@ -24,10 +25,32 @@ class AutopostService
     public string|null $file;
     public int $sleep;
 
+
+    function fixUnicode($text): string
+    {
+        $text = strip_tags($text);
+        $fixedText = '';
+        for ($i = 0; $i < mb_strlen($text, 'UTF-8'); $i++) {
+            $char = mb_substr($text, $i, 1, 'UTF-8');
+
+            if (strlen($char) > 1) {
+                $fixedText .= "";
+            } else {
+                $fixedText .= $char;
+            }
+        }
+
+        return $fixedText;
+    }
+
     public function __construct($title, $file, $url = null)
     {
-        $this->title = $title;
-        $this->file = $file;
+        $this->title = $this->fixUnicode($title);
+
+        $file_path = storage_path("app/posts/image.jpg");
+        file_put_contents($file_path, file_get_contents($file));
+        $this->file = $file_path;
+
         $this->sleep = 5;
         $this->driver = new Webdriver($url, headless: false, save_data: true);
     }
@@ -51,6 +74,8 @@ class AutopostService
             $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
             sleep($this->sleep);
             $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
+            sleep($this->sleep);
+            $driver->driver->findElement(WebDriverBy::xpath("//div[@data-lexical-editor='true']"))->sendKeys($this->title);
             sleep($this->sleep);
             $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
             return true;
@@ -103,10 +128,21 @@ class AutopostService
             $el = $driver->driver->findElements(WebDriverBy::xpath("//div[@role='button']"));
             $el[0]->click();
             sleep($this->sleep);
-            $driver->driver->findElement(WebDriverBy::xpath("//div[@data-lexical-editor='true']"))->sendKeys($this->title);
-            sleep($this->sleep);
-            $driver->driver->findElement(WebDriverBy::xpath("//input[@type='file']"))->sendKeys($this->file);
-            sleep($this->sleep);
+
+            try {
+                $driver->driver->findElement(WebDriverBy::xpath("//div[@data-lexical-editor='true']"))->sendKeys($this->title);
+                sleep($this->sleep);
+            } catch (Throwable $e) {
+                print_r($e->getMessage());
+            }
+
+            try {
+                $driver->driver->findElement(WebDriverBy::xpath("//input[@type='file']"))->sendKeys($this->file);
+                sleep($this->sleep);
+            } catch (Throwable $e) {
+                print_r($e->getMessage());
+            }
+
             $driver->driver->findElement(WebDriverBy::xpath("/html/body/div[4]/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[2]/div/div[2]/div/div[1]/div"))->click();
             return true;
         } catch (Throwable $exception) {

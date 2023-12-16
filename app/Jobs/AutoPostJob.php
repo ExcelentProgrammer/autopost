@@ -26,19 +26,8 @@ class AutoPostJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            try {
-                exec("pkill chrome");
-                exec("pkill chromedriver");
-                exec("chromedriver > /dev/null 2>&1 &");
-                sleep(2);
-            } catch (Throwable $e) {
-                print_r($e->getMessage());
-            }
-
-            $sleep = 20;
+            $sleep = 40;
             $service = new AutopostService($this->title, $this->file);
-
-//            $service->telegram(1769851684);
 
             try {
                 $service->instagram();
@@ -55,6 +44,8 @@ class AutoPostJob implements ShouldQueue
             }
 
 
+
+
             try {
                 $service->facebook();
                 sleep($sleep);
@@ -62,6 +53,7 @@ class AutoPostJob implements ShouldQueue
                 print_r("facebook error");
             }
 
+            sleep(60);
             $service->driver->driver->quit();
         } catch (Throwable $e) {
             print_r($e->getMessage());

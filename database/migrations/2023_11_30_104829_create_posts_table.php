@@ -13,8 +13,8 @@ return new class extends Migration {
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->string("file");
+            $table->text("title");
+            $table->text("file");
             $table->string("status")->default(PostStatusEnum::pending);
             $table->timestamps();
         });

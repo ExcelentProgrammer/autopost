@@ -16,7 +16,8 @@ class PostCreateRequest extends FormRequest
     {
         return [
             "title" => ['required', "string"],
-            "file" => ['required', "file"]
+            "file" => ["file"],
+            "fileUrl"=>['url']
         ];
     }
 }

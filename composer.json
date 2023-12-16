@@ -11,7 +11,8 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "nutgram/nutgram": "^4.12",
-        "php-webdriver/webdriver": "*"
+        "php-webdriver/webdriver": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
