@@ -1,21 +1,27 @@
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
+        # Disable MultiViews and Indexes for better security and performance
         Options -MultiViews -Indexes
     </IfModule>
 
+    # Enable the rewrite engine
     RewriteEngine On
 
     # Handle Authorization Header
+    # If the HTTP Authorization header is present, store it in the HTTP_AUTHORIZATION environment variable
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Redirect Trailing Slashes If Not A Folder...
+    # If the requested filename is not a directory, and the requested URI has a trailing slash, remove the trailing slash
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
     # Send Requests To Front Controller...
+    # If the requested filename is not a directory and not a file, rewrite the request to index.php
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
