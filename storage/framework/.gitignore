@@ -1,9 +1,20 @@
-compiled.php
-config.php
-down
-events.scanned.php
-maintenance.php
-routes.php
-routes.scanned.php
-schedule-*
-services.json
+# List of files and directories related to a PHP project
+# Each item is separated by a new line
+
+compiled.php    # Compiled PHP code
+config.php      # Project configuration file
+
+# The following are directories
+down           # Directory for storing down files
+events.scanned.php  # Events that have been scanned
+maintenance.php  # Maintenance file
+
+# The following are routes files
+routes.php      # Primary routes file
+routes.scanned.php  # Scanned routes file
+
+# The following are schedule files
+schedule-*      # Schedule files with a wildcard for any schedule file
+
+services.json   # JSON file for storing service information
+
