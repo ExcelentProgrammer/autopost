@@ -1,22 +1,25 @@
 #!/usr/bin/env php
 <?php
 
-define('LARAVEL_START', microtime(true));
+// Define the constant 'LARAVEL\_START' to store the current time
+define('LARAVEL\_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
 |--------------------------------------------------------------------------
 |
-| Composer provides a convenient, automatically generated class loader
-| for our application. We just need to utilize it! We'll require it
-| into the script here so that we do not have to worry about the
-| loading of any of our classes manually. It's great to relax.
+| Composer, a PHP dependency management tool, provides a convenient,
+| automatically generated class loader for our application. We just
+| need to require it into the script here so that we do not have to
+| worry about the manual loading of any of our classes.
 |
 */
 
+// Require the Composer's autoloader file
 require __DIR__.'/vendor/autoload.php';
 
+// Require the bootstrap/app.php file which will bootstrap the framework
 $app = require_once __DIR__.'/bootstrap/app.php';
 
 /*
@@ -26,15 +29,17 @@ $app = require_once __DIR__.'/bootstrap/app.php';
 |
 | When we run the console application, the current CLI command will be
 | executed in this console and the response sent back to a terminal
-| or another output device for the developers. Here goes nothing!
+| or another output device for the developers.
 |
 */
 
+// Get the Kernel instance from the application container
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 
+// Handle the console command and get the exit status
 $status = $kernel->handle(
-    $input = new Symfony\Component\Console\Input\ArgvInput,
-    new Symfony\Component\Console\Output\ConsoleOutput
+    $input = new Symfony\Component\Console\Input\ArgvInput, // Create a new ArgvInput instance
+    new Symfony\Component\Console\Output\ConsoleOutput() // Create a new ConsoleOutput instance
 );
 
 /*
@@ -48,6 +53,9 @@ $status = $kernel->handle(
 |
 */
 
+// Terminate the kernel, this will fire any shutdown events
 $kernel->terminate($input, $status);
 
+// Exit the script with the exit status
 exit($status);
+
