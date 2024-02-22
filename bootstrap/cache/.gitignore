@@ -1,2 +1,15 @@
-*
+* ------------------------------------------------------------------------------
 !.gitignore
+!
+! This file is used by Git to determine which files and directories to ignore
+! when committing code to version control. By default, it includes some common
+! files and directories that are not necessary to include in version control,
+! such as backup files, build artifacts, and IDE-specific files.
+!
+! To add a file or directory to this list, simply add its name or path (relative
+! to the root of the repository) to a new line in this file. Lines that start
+! with a '!' character are ignored by Git and are used for comments.
+!
+! For more information, see the official Git documentation on ignoring files:
+! https://git-scm.com/docs/gitignore
+* ------------------------------------------------------------------------------
