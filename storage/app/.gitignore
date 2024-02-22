@@ -1,3 +1,95 @@
-*
-!public/
-!.gitignore
+# Dependency directory
+/node_modules
+
+# OS specific files
+*.DS_Store
+
+# IDE specific files
+.idea
+.vscode
+
+# Log files
+logs
+*.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+lerna-debug.log
+
+# Editor directories and files
+.storybook
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.local.json
+.env.development.json
+.env.test.json
+.env.production.json
+
+# Production directories and files
+build
+dist
+
+# Cypress configuration files
+cypress.json
+cypress.config.js
+cypress.env.json
+cypress.json5
+cypress.js
+cypress.ts
+
+# Webpack configuration files
+webpack.config.js
+webpack.config.ts
+webpack.config.babel.js
+webpack.config.babel.ts
+
+# Jest configuration files
+jest.config.js
+jest.config.ts
+jest.config.json
+jest.config.js.orig
+
+# ESLint configuration files
+.eslintrc.js
+.eslintrc.json
+.eslintrc.yaml
+.eslintrc.yml
+.eslintrc
+.eslintcache
+
+# Prettier configuration files
+.prettierrc.js
+.prettierrc.json
+.prettierrc.yaml
+.prettierrc.yml
+.prettierrc
+
+# TypeScript configuration files
+tsconfig.json
+tsconfig.js
+tsconfig.node.json
+tsconfig.test.json
+tsconfig.base.json
+
+# Package lock files
+package-lock.json
+yarn.lock
+
+# Artifacts
+coverage
+
+# Yarn cache directory
+.yarn
+.yarn/cache
+
+# npm cache directory
+.npm
+.npm/_cacache
+
+# dotenv files
+.env.example
+
+#
