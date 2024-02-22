@@ -1,1 +1,38 @@
-*.sqlite*
+-- This is a SQLite code block
+
+-- Create a new database called "mydatabase.db"
+sqlite3 mydatabase.db
+
+-- Create a new table called "users"
+CREATE TABLE users (
+    -- The user's unique ID
+    id INTEGER PRIMARY KEY,
+    -- The user's first name
+    first_name TEXT,
+    -- The user's last name
+    last_name TEXT,
+    -- The user's email address
+    email TEXT UNIQUE,
+    -- The user's password
+    password TEXT
+);
+
+-- Insert a new user into the "users" table
+INSERT INTO users (first_name, last_name, email, password)
+VALUES ('John', 'Doe', 'john.doe@example.com', 'password123');
+
+-- Query the "users" table to retrieve a user by their email address
+SELECT * FROM users
+WHERE email = 'john.doe@example.com';
+
+-- Update a user's password in the "users" table
+UPDATE users
+SET password = 'newpassword123'
+WHERE email = 'john.doe@example.com';
+
+-- Delete a user from the "users" table
+DELETE FROM users
+WHERE email = 'john.doe@example.com';
+
+-- Close the connection to the "mydatabase.db" database
+.quit
