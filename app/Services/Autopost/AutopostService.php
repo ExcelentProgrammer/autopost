@@ -17,22 +17,63 @@ use Throwable;
 
 class AutopostService
 {
+    // Property to store the URL for the webdriver
     public string|null $url;
+
+    // Property to store the Webdriver object
     public Webdriver $driver;
 
+    // Property to store the post title
     public string|null $title;
 
+    // Property to store the file path of the image to be posted
     public string|null $file;
+
+    // Property to store the sleep time between actions
     public int $sleep;
 
-
-    function fixUnicode($text): string
+    /**
+     * Constructor to initialize the properties
+     * @param string $title - The title of the post
+     * @param string $file - The file path of the image to be posted
+     * @param string|null $url - The URL to navigate the webdriver to (optional)
+     */
+    public function __construct(string $title, string $file, string|null $url = null)
     {
+        // Fix the unicode characters in the title
+        $this->title = $this->fixUnicode($title);
+
+        // Save the image to the storage directory
+        $file_path = storage_path("app/posts/image.jpg");
+        file_put_contents($file_path, file_get_contents($file));
+        $this->file = $file_path;
+
+        // Set the sleep time to 5 seconds
+        $this->sleep = 5;
+
+        // Initialize the Webdriver object
+        $this->driver = new Webdriver($url, headless: false, save_data: true);
+    }
+
+    /**
+     * Method to fix unicode characters in a string
+     * @param string $text - The string to fix unicode characters in
+     * @return string - The string with fixed unicode characters
+     */
+    public function fixUnicode(string $text): string
+    {
+        // Remove HTML tags from the string
         $text = strip_tags($text);
+
+        // Initialize the fixed string
         $fixedText = '';
+
+        // Loop through each character in the string
         for ($i = 0; $i < mb_strlen($text, 'UTF-8'); $i++) {
             $char = mb_substr($text, $i, 1, 'UTF-8');
 
+            // If the character takes up more than one byte, add an empty string
+            // to the fixed string, else add the character
             if (strlen($char) > 1) {
                 $fixedText .= "";
             } else {
@@ -40,126 +81,51 @@ class AutopostService
             }
         }
 
+        // Return the fixed string
         return $fixedText;
     }
 
-    public function __construct($title, $file, $url = null)
-    {
-        $this->title = $this->fixUnicode($title);
-
-        $file_path = storage_path("app/posts/image.jpg");
-        file_put_contents($file_path, file_get_contents($file));
-        $this->file = $file_path;
-
-        $this->sleep = 5;
-        $this->driver = new Webdriver($url, headless: false, save_data: true);
-    }
-
     /**
-     * @param null $url
-     * @return bool
+     * Method to post to Instagram
+     * @param string|null $url - The URL to navigate the webdriver to (optional)
+     * @return bool - True if the post was successful, false otherwise
+     * @throws Throwable
      */
-    public function instagram($url = null): bool
+    public function instagram(string|null $url = null): bool
     {
         try {
+            // Set the URL for the webdriver
             $this->driver->url = $url ?? "https://www.instagram.com";
+
+            // Start the webdriver
             $driver = $this->driver;
             $driver->start();
+
+            // Click on the paper plane icon to open the post creation screen
             sleep($this->sleep);
             $driver->click(by: WebDriverBy::xpath('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[7]/div/span/div/a'));
+
+            // Wait for 5 seconds
             sleep($this->sleep);
+
+            // Find the file input element and set its value to the file path
             $el = $driver->driver->findElement(WebDriverBy::xpath("//input[@class='_ac69']"));
             $el->sendKeys($this->file);
+
+            // Wait for 5 seconds
             sleep($this->sleep);
+
+            // Click on the next button
             $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
+
+            // Wait for 5 seconds
             sleep($this->sleep);
+
+            // Click on the next button again
             $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
-            sleep($this->sleep);
-            $driver->driver->findElement(WebDriverBy::xpath("//div[@data-lexical-editor='true']"))->sendKeys($this->title);
-            sleep($this->sleep);
-            $driver->click(by: WebDriverBy::xpath("//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xyamay9 x1pi30zi x1l90r2v x1swvt13 x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]"));
-            return true;
-        } catch (Throwable $exception) {
-            Helpers::log($exception->getMessage());
-            return false;
-        }
-    }
 
-    /**
-     * @param null $url
-     * @return bool
-     */
-    public function facebook($url = null): bool
-    {
-        try {
-            $this->driver->url = $url ?? "https://www.facebook.com";
-            $driver = $this->driver;
-            $driver->start();
-
-            $driver->click(by: WebDriverBy::xpath("//div[@aria-label='Menyu']"));
-            sleep($this->sleep);
-            $driver->click(by: WebDriverBy::xpath("/html/body/div[1]/div/div[1]/div/div[2]/div[5]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div/div[2]/div[1]/div/div/div[2]/div[2]/div/div/div[2]/div[1]"));
-            sleep($this->sleep);
-            $driver->driver->findElement(WebDriverBy::xpath("/html/body/div[5]/div[1]/div/div[2]/div/div/div/form/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div[1]/div/div/div[1]/p"))->sendKeys($this->title);
-            sleep($this->sleep);
-            $driver->click(by: WebDriverBy::xpath("/html/body/div[5]/div[1]/div/div[2]/div/div/div/form/div/div[1]/div/div/div/div[3]/div[1]"));
-            sleep($this->sleep);
-            $driver->driver->findElement(WebDriverBy::xpath('//*[@id="facebook"]/body/div[5]/div[1]/div/div[2]/div/div/div/form/div/div[1]/div/div/div/div[2]/div[1]/div[2]/div/div[1]/div/div/input'))->sendKeys($this->file);
-            sleep($this->sleep);
-            $driver->click(by: WebDriverBy::xpath('//*[@id="facebook"]/body/div[5]/div[1]/div/div[2]/div/div/div/form/div/div[1]/div/div/div/div[3]/div[4]/div'));
-            return true;
-        } catch (Throwable $exception) {
-            Helpers::log($exception->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * @param $url
-     * @return bool
-     */
-    public function threads($url = null): bool
-    {
-        try {
-            $this->driver->url = $url ?? "https://www.threads.net";
-            $driver = $this->driver;
-            $driver->start();
-
-            $el = $driver->driver->findElements(WebDriverBy::xpath("//div[@role='button']"));
-            $el[0]->click();
+            // Wait for 5 seconds
             sleep($this->sleep);
 
-            try {
-                $driver->driver->findElement(WebDriverBy::xpath("//div[@data-lexical-editor='true']"))->sendKeys($this->title);
-                sleep($this->sleep);
-            } catch (Throwable $e) {
-                print_r($e->getMessage());
-            }
-
-            try {
-                $driver->driver->findElement(WebDriverBy::xpath("//input[@type='file']"))->sendKeys($this->file);
-                sleep($this->sleep);
-            } catch (Throwable $e) {
-                print_r($e->getMessage());
-            }
-
-            $driver->driver->findElement(WebDriverBy::xpath("/html/body/div[4]/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[2]/div/div[2]/div/div[1]/div"))->click();
-            return true;
-        } catch (Throwable $exception) {
-            Helpers::log($exception->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * @throws NotFoundExceptionInterface|ContainerExceptionInterface
-     */
-    #[NoReturn] public function telegram($chat_id): bool
-    {
-        $token = Env::get("BOT_TOKEN");
-        $bot = new Nutgram($token);
-        $bot->sendPhoto(photo: InputFile::make(fopen($this->file, "rb")), chat_id: $chat_id, caption: $this->title);
-        return true;
-    }
-}
-
+            // Find the textarea element and set its value to the title
+            $driver
